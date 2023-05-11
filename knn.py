@@ -42,7 +42,7 @@ def naive_euclidian_distance(point1, point2):
 start = time.time()
 
 #klasifikasi knn
-def knn(x_train, y_train, x_test, actual=pd.DataFrame(), k=2, mode='test'):
+def knn(x_train, y_train, x_test, actual=pd.DataFrame(), k=3, mode='test'):
     y_result = pd.DataFrame(columns=['y_pred'])
     score = 0
 
