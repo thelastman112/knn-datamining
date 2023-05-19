@@ -8,9 +8,9 @@ from sklearn.model_selection import train_test_split
 import matplotlib
 matplotlib.use("TkAgg")
 
-data_raw = pd.read_csv('dataset/crxdata.csv')
-data = data_raw[['A2', 'A3', 'A16']]
-data_X, data_y = data.drop('A16', axis=1), data['A16']
+rawData = pd.read_csv('dataset/crxdata.csv')
+data = rawData[['A2', 'A3', 'A16']]
+data_A, data_B = data.drop('A16', axis=1), data['A16']
 
 fig, ax = plt.subplots()
 
@@ -23,7 +23,7 @@ ax.set_title('Dataset Visualization')
 ax.legend()
 
 # mengambil data latih dan data uji
-X_train, X_test, y_train, y_test = train_test_split(data_X, data_y, test_size=0.2, random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(data_A, data_B, test_size=0.2, random_state=1)
 
 def delete_multiple_lines(n=1):
     """Menghapus Baris Terakhir di STDOUT."""
