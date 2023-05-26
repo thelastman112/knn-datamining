@@ -58,7 +58,6 @@ def knn(x_train, y_train, x_test, actual=pd.DataFrame(), k=3, mode='test'):
                 distance = naive_euclidian_distance(x_train.iloc[j], x_test.iloc[i])
                 # menambah jarak dan y ke result_child, jangan gunakan append karena sudah usang
                 result_child.loc[j] = [distance, y_train.iloc[j]]
-
                 # print waktu
                 print(f'{i+1}/{vertical_length_test}')
                 # cetak print di terminal
@@ -66,6 +65,7 @@ def knn(x_train, y_train, x_test, actual=pd.DataFrame(), k=3, mode='test'):
             # dapatkan k jarak terdekat
             result_child = result_child.sort_values(by='distance')
             result_child = result_child.head(k)
+            # print(result_child)
             # dapatkan y_pred
             y_pred = result_child['y'].mode()[0]
             # tambahkan y_pred ke hasil
@@ -79,7 +79,7 @@ def knn(x_train, y_train, x_test, actual=pd.DataFrame(), k=3, mode='test'):
                     score += 1
             score = score / vertical_length_test
 
-        return y_result, score
+        return y_result, score, result_child
     else:
         raise Exception(f'Mode {mode} is not supported')
     
@@ -87,15 +87,17 @@ def knn(x_train, y_train, x_test, actual=pd.DataFrame(), k=3, mode='test'):
 k_list = [3, 5, 7]
 for k in k_list:
     print(f'K: {k}')
-    y_result, score = knn(X_train, y_train, X_test, y_test, k=k, mode='test')
+    y_result, score, result_child = knn(X_train, y_train, X_test, y_test, k=k, mode='test')
     print(f'Score: {score}')
     print(f'Time: {time.time() - start}')
+    # print(f'sorted distance: {}')
 
     # menyimpan data ke dalam bentuk csv
     y_result.to_csv(f'result/knn_k_{k}.csv', index=False)
+    result_child.to_csv(f'result/knn_distance_k_{k}.csv')
 
     # hasilkan plot dan simpan ke dalam png
-    fig, ax = plt.subplots(nrows=2, sharey=True)
+    fig, ax = plt.subplots(nrows=4, sharey=True)
     ax[0].scatter(X_train[y_train == 1]['A2'], X_train[y_train == 1]['A3'], c='red', marker='+', label="+")
     ax[0].scatter(X_train[y_train == 0]['A2'], X_train[y_train == 0]['A3'], c='blue', marker='o', label="-")
     ax[0].set_xlabel('A2')
@@ -107,7 +109,6 @@ for k in k_list:
     ax[1].scatter(X_test[y_test == 0]['A2'], X_test[y_test == 0]['A3'], c='blue', marker='o', label="-")
     ax[1].set_xlabel('A2')
     ax[1].set_ylabel('A3')
-    ax[1].set_title(f'Dataset Visualization with K = {k}')
     ax[1].legend()
     plt.savefig(f'result/knn_k_{k}.png')
 
